@@ -15,25 +15,11 @@ interface State {
   steps: Array<Step>;
 }
 
-function Skip() {
-  return <strong data-test-id="skip-label">Do you really want to skip?</strong>;
-}
-
-function NextWithProgress() {
-  return <strong>{`Go ({step} of {steps})`}</strong>;
-}
-
-const tourSteps: Array<Step> = [
+const tourSteps = [
   ...standardSteps.slice(0, 3).map(step => {
     if (step.target === '.mission button') {
       return {
         ...step,
-        showProgress: true,
-        locale: {
-          nextLabelWithProgress: <NextWithProgress />,
-          back: <strong>Go Back</strong>,
-          skip: <Skip />,
-        },
         target: '.mission h2 span',
       };
     }

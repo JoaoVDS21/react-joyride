@@ -1,6 +1,5 @@
-import { cloneElement, FC, isValidElement, ReactElement, ReactNode } from 'react';
+import { isValidElement, ReactNode } from 'react';
 import { createPortal } from 'react-dom';
-import innerText from 'react-innertext';
 import is from 'is-lite';
 
 import { LIFECYCLE } from '~/literals';
@@ -8,12 +7,6 @@ import { LIFECYCLE } from '~/literals';
 import { AnyObject, Lifecycle, NarrowPlainObject, Step } from '~/types';
 
 import { hasPosition } from './dom';
-
-interface GetReactNodeTextOptions {
-  defaultValue?: any;
-  step?: number;
-  steps?: number;
-}
 
 interface LogOptions {
   /** The data to be logged */
@@ -79,27 +72,31 @@ export function getObjectType(value: unknown): string {
   return Object.prototype.toString.call(value).slice(8, -1).toLowerCase();
 }
 
-export function getReactNodeText(input: ReactNode, options: GetReactNodeTextOptions = {}): string {
-  const { defaultValue, step, steps } = options;
-  let text = innerText(input);
+/**
+ * Get text from React components
+ */
+export function getText(root: ReactNode): string {
+  const content: Array<string | number> = [];
 
-  if (!text) {
-    if (
-      isValidElement(input) &&
-      !Object.values(input.props).length &&
-      getObjectType(input.type) === 'function'
-    ) {
-      const component = (input.type as FC)({});
+  const recurse = (child: ReactNode) => {
+    if (typeof child === 'string' || typeof child === 'number') {
+      content.push(child);
+    } else if (Array.isArray(child)) {
+      child.forEach(c => recurse(c));
+    } else if (isValidElement(child)) {
+      const { children } = child.props;
 
-      text = getReactNodeText(component, options);
-    } else {
-      text = innerText(defaultValue);
+      if (Array.isArray(children)) {
+        children.forEach(c => recurse(c));
+      } else {
+        recurse(children);
+      }
     }
-  } else if ((text.includes('{step}') || text.includes('{steps}')) && step && steps) {
-    text = text.replace('{step}', step.toString()).replace('{steps}', steps.toString());
-  }
+  };
 
-  return text;
+  recurse(root);
+
+  return content.join(' ').trim();
 }
 
 export function hasValidKeys(object: Record<string, unknown>, keys?: Array<string>): boolean {
@@ -241,47 +238,6 @@ export function pick<T extends Record<string, any>, K extends keyof T>(
   }
 
   return output as Pick<T, K>;
-}
-
-export function replaceLocaleContent(input: ReactNode, step: number, steps: number): ReactNode {
-  const replacer = (text: string) =>
-    text.replace('{step}', String(step)).replace('{steps}', String(steps));
-
-  if (getObjectType(input) === 'string') {
-    return replacer(input as string);
-  }
-
-  if (!isValidElement(input)) {
-    return input;
-  }
-
-  const { children } = input.props;
-
-  if (getObjectType(children) === 'string' && children.includes('{step}')) {
-    return cloneElement(input as ReactElement, {
-      children: replacer(children),
-    });
-  }
-
-  if (Array.isArray(children)) {
-    return cloneElement(input as ReactElement, {
-      children: children.map((child: ReactNode) => {
-        if (typeof child === 'string') {
-          return replacer(child);
-        }
-
-        return replaceLocaleContent(child, step, steps);
-      }),
-    });
-  }
-
-  if (getObjectType(input.type) === 'function' && !Object.values(input.props).length) {
-    const component = (input.type as FC)({});
-
-    return replaceLocaleContent(component, step, steps);
-  }
-
-  return input;
 }
 
 export function shouldScroll(options: ShouldScrollOptions): boolean {

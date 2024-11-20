@@ -1,7 +1,6 @@
 import * as React from 'react';
+import innerText from 'react-innertext';
 import is from 'is-lite';
-
-import { getReactNodeText } from '~/modules/helpers';
 
 import { BeaconProps } from '~/types';
 
@@ -97,7 +96,7 @@ export default class JoyrideBeacon extends React.Component<BeaconProps> {
       step,
       styles,
     } = this.props;
-    const title = getReactNodeText(locale.open);
+    const title = is.string(locale.open) ? locale.open : innerText(locale.open);
     const sharedProps = {
       'aria-label': title,
       onClick: onClickOrHover,

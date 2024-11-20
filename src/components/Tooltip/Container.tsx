@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { getReactNodeText } from '~/modules/helpers';
+import { getText } from '~/modules/helpers';
 
 import { TooltipRenderProps } from '~/types';
 
@@ -11,16 +11,22 @@ function JoyrideTooltipContainer(props: TooltipRenderProps) {
     props;
   const { content, hideBackButton, hideCloseButton, hideFooter, showSkipButton, styles, title } =
     step;
-  const output: Record<string, React.ReactNode> = {};
+  const output: Record<string, React.ReactNode> = {
+    primary: primaryProps.title,
+  };
 
-  output.primary = (
-    <button
-      data-test-id="button-primary"
-      style={styles.buttonNext}
-      type="button"
-      {...primaryProps}
-    />
-  );
+  if (output.primary) {
+    output.primary = (
+      <button
+        data-test-id="button-primary"
+        style={styles.buttonNext}
+        type="button"
+        {...primaryProps}
+      >
+        {output.primary}
+      </button>
+    );
+  }
 
   if (showSkipButton && !isLastStep) {
     output.skip = (
@@ -30,13 +36,17 @@ function JoyrideTooltipContainer(props: TooltipRenderProps) {
         style={styles.buttonSkip}
         type="button"
         {...skipProps}
-      />
+      >
+        {skipProps.title}
+      </button>
     );
   }
 
   if (!hideBackButton && index > 0) {
     output.back = (
-      <button data-test-id="button-back" style={styles.buttonBack} type="button" {...backProps} />
+      <button data-test-id="button-back" style={styles.buttonBack} type="button" {...backProps}>
+        {backProps.title}
+      </button>
     );
   }
 
@@ -47,14 +57,14 @@ function JoyrideTooltipContainer(props: TooltipRenderProps) {
   return (
     <div
       key="JoyrideTooltip"
-      aria-label={getReactNodeText(title ?? content)}
+      aria-label={getText(title) || getText(content)}
       className="react-joyride__tooltip"
       style={styles.tooltip}
       {...tooltipProps}
     >
       <div style={styles.tooltipContainer}>
         {title && (
-          <h1 aria-label={getReactNodeText(title)} style={styles.tooltipTitle}>
+          <h1 aria-label={getText(title)} style={styles.tooltipTitle}>
             {title}
           </h1>
         )}

@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { getReactNodeText, replaceLocaleContent } from '~/modules/helpers';
+import { getText } from '~/modules/helpers';
 
 import { TooltipProps } from '~/types';
 
@@ -43,69 +43,61 @@ export default class JoyrideTooltip extends React.Component<TooltipProps> {
 
   getElementsProps = () => {
     const { continuous, index, isLastStep, setTooltipRef, size, step } = this.props;
-    const { back, close, last, next, nextLabelWithProgress, skip } = step.locale;
 
-    const backText = getReactNodeText(back);
-    const closeText = getReactNodeText(close);
-    const lastText = getReactNodeText(last);
-    const nextText = getReactNodeText(next);
-    const skipText = getReactNodeText(skip);
+    const back = getText(step.locale.back);
+    const close = getText(step.locale.close);
+    const last = getText(step.locale.last);
+    const next = getText(step.locale.next);
+    const skip = getText(step.locale.skip);
 
-    let primary = close;
-    let primaryText = closeText;
+    let primaryLabel = close;
+    let primaryText = close;
 
     if (continuous) {
-      primary = next;
-      primaryText = nextText;
+      primaryLabel = next;
+      primaryText = next;
 
       if (step.showProgress && !isLastStep) {
-        const labelWithProgress = getReactNodeText(nextLabelWithProgress, {
-          step: index + 1,
-          steps: size,
-        });
-
-        primary = replaceLocaleContent(nextLabelWithProgress, index + 1, size);
-        primaryText = labelWithProgress;
+        primaryLabel = getText(step.locale.nextLabelWithProgress)
+          .replace('{step}', String(index + 1))
+          .replace('{steps}', String(size));
+        primaryText = `${next} (${index + 1}/${size})`;
       }
 
       if (isLastStep) {
-        primary = last;
-        primaryText = lastText;
+        primaryLabel = last;
+        primaryText = last;
       }
     }
 
     return {
       backProps: {
-        'aria-label': backText,
-        children: back,
+        'aria-label': back,
         'data-action': 'back',
         onClick: this.handleClickBack,
         role: 'button',
-        title: backText,
+        title: back,
       },
       closeProps: {
-        'aria-label': closeText,
-        children: close,
+        'aria-label': close,
         'data-action': 'close',
         onClick: this.handleClickClose,
         role: 'button',
-        title: closeText,
+        title: close,
       },
       primaryProps: {
-        'aria-label': primaryText,
-        children: primary,
+        'aria-label': primaryLabel,
         'data-action': 'primary',
         onClick: this.handleClickPrimary,
         role: 'button',
         title: primaryText,
       },
       skipProps: {
-        'aria-label': skipText,
-        children: skip,
+        'aria-label': skip,
         'data-action': 'skip',
         onClick: this.handleClickSkip,
         role: 'button',
-        title: skipText,
+        title: skip,
       },
       tooltipProps: {
         'aria-modal': true,

@@ -192,47 +192,39 @@ exports[`Joyride > Custom Options > should render the STEP 2 Tooltip > tooltip 1
           style="flex: 1;"
         >
           <button
-            aria-label="Do you really want to skip?"
+            aria-label="Skip"
             aria-live="off"
             data-action="skip"
             data-test-id="button-skip"
             role="button"
             style="background-color: transparent; border: 0px; border-radius: 0; color: rgb(51, 51, 51); cursor: pointer; font-size: 14px; line-height: 1; padding: 8px;"
-            title="Do you really want to skip?"
+            title="Skip"
             type="button"
           >
-            <strong
-              data-test-id="skip-label"
-            >
-              Do you really want to skip?
-            </strong>
+            Skip
           </button>
         </div>
         <button
-          aria-label="Go Back"
+          aria-label="Back"
           data-action="back"
           data-test-id="button-back"
           role="button"
           style="background-color: transparent; border: 0px; border-radius: 0; color: rgb(255, 0, 0); cursor: pointer; font-size: 16px; line-height: 1; padding: 8px; margin-left: auto; margin-right: 5px;"
-          title="Go Back"
+          title="Back"
           type="button"
         >
-          <strong>
-            Go Back
-          </strong>
+          Back
         </button>
         <button
-          aria-label="Go (2 of 4)"
+          aria-label="Next"
           data-action="primary"
           data-test-id="button-primary"
           role="button"
           style="background-color: rgb(169, 71, 255); border: 0px; border-radius: 4px; color: rgb(255, 255, 255); cursor: pointer; font-size: 16px; line-height: 1; padding: 8px;"
-          title="Go (2 of 4)"
+          title="Next"
           type="button"
         >
-          <strong>
-            Go (2 of 4)
-          </strong>
+          Next
         </button>
       </div>
       <button
