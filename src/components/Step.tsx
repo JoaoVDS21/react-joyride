@@ -142,7 +142,7 @@ export default class JoyrideStep extends React.Component<StepProps> {
 
       if (shouldScroll && this.tooltip) {
         this.scope = new Scope(this.tooltip, { selector: '[data-action=primary]' });
-        this.scope.setFocus();
+        // this.scope.setFocus();
       }
     }
 
@@ -249,7 +249,7 @@ export default class JoyrideStep extends React.Component<StepProps> {
             locale={step.locale}
             nonce={nonce}
             onClickOrHover={this.handleClickHoverBeacon}
-            shouldFocus={shouldScroll}
+            shouldFocus={false}
             size={size}
             step={step}
             styles={step.styles}
