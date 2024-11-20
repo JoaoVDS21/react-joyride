@@ -142,7 +142,7 @@ export default class JoyrideStep extends React.Component<StepProps> {
 
       if (shouldScroll && this.tooltip) {
         this.scope = new Scope(this.tooltip, { selector: '[data-action=primary]' });
-        // this.scope.setFocus();
+        this.scope.setFocus();
       }
     }
 
